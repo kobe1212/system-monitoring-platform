@@ -1,0 +1,291 @@
+{
+  "info": {
+    "name": "System Monitoring API",
+    "description": "Complete API collection for System Monitoring & KPI Analytics Platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Metrics",
+      "item": [
+        {
+          "name": "Create Metric - ResponseTime",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"metricName\": \"ResponseTime\",\n  \"value\": 150.5,\n  \"unit\": \"ms\",\n  \"source\": \"WebServer01\",\n  \"tags\": \"production,api\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/metrics",
+              "host": ["{{baseUrl}}"],
+              "path": ["metrics"]
+            }
+          }
+        },
+        {
+          "name": "Create Metric - RequestCount",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"metricName\": \"RequestCount\",\n  \"value\": 1000,\n  \"unit\": \"requests\",\n  \"source\": \"WebServer01\",\n  \"tags\": \"production\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/metrics",
+              "host": ["{{baseUrl}}"],
+              "path": ["metrics"]
+            }
+          }
+        },
+        {
+          "name": "Create Metric - ErrorCount",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"metricName\": \"ErrorCount\",\n  \"value\": 5,\n  \"unit\": \"errors\",\n  \"source\": \"WebServer01\",\n  \"tags\": \"production\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/metrics",
+              "host": ["{{baseUrl}}"],
+              "path": ["metrics"]
+            }
+          }
+        },
+        {
+          "name": "Create Metric - Uptime",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"metricName\": \"Uptime\",\n  \"value\": 99.95,\n  \"unit\": \"percent\",\n  \"source\": \"WebServer01\",\n  \"tags\": \"production\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/metrics",
+              "host": ["{{baseUrl}}"],
+              "path": ["metrics"]
+            }
+          }
+        },
+        {
+          "name": "Get All Metrics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/metrics",
+              "host": ["{{baseUrl}}"],
+              "path": ["metrics"]
+            }
+          }
+        },
+        {
+          "name": "Get Metrics - Filtered by Name",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/metrics?metricName=ResponseTime",
+              "host": ["{{baseUrl}}"],
+              "path": ["metrics"],
+              "query": [
+                {
+                  "key": "metricName",
+                  "value": "ResponseTime"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Metrics - Paginated",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/metrics?pageNumber=1&pageSize=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["metrics"],
+              "query": [
+                {
+                  "key": "pageNumber",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Metric by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/metrics/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["metrics", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Recent Metrics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/metrics/recent?count=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["metrics", "recent"],
+              "query": [
+                {
+                  "key": "count",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "KPIs",
+      "item": [
+        {
+          "name": "Calculate KPIs",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/kpis/calculate",
+              "host": ["{{baseUrl}}"],
+              "path": ["kpis", "calculate"]
+            }
+          }
+        },
+        {
+          "name": "Get All KPIs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/kpis",
+              "host": ["{{baseUrl}}"],
+              "path": ["kpis"]
+            }
+          }
+        },
+        {
+          "name": "Get KPIs by Date Range",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/kpis/date-range?startDate=2024-12-01T00:00:00Z&endDate=2024-12-31T23:59:59Z",
+              "host": ["{{baseUrl}}"],
+              "path": ["kpis", "date-range"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2024-12-01T00:00:00Z"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2024-12-31T23:59:59Z"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Anomalies",
+      "item": [
+        {
+          "name": "Detect Anomalies",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/anomalies/detect",
+              "host": ["{{baseUrl}}"],
+              "path": ["anomalies", "detect"]
+            }
+          }
+        },
+        {
+          "name": "Get All Anomalies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/anomalies",
+              "host": ["{{baseUrl}}"],
+              "path": ["anomalies"]
+            }
+          }
+        },
+        {
+          "name": "Get Unresolved Anomalies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/anomalies/unresolved",
+              "host": ["{{baseUrl}}"],
+              "path": ["anomalies", "unresolved"]
+            }
+          }
+        },
+        {
+          "name": "Resolve Anomaly",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/anomalies/1/resolve",
+              "host": ["{{baseUrl}}"],
+              "path": ["anomalies", "1", "resolve"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api",
+      "type": "string"
+    }
+  ]
+}

@@ -1,0 +1,183 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <div>
+      <h1>System Monitoring Dashboard</h1>
+      <p class="subtitle">Real-time analytics and performance insights</p>
+    </div>
+    <button class="refresh-btn" (click)="refreshDashboard()" [disabled]="isLoading">
+      <span *ngIf="!isLoading">🔄 Refresh</span>
+      <span *ngIf="isLoading">⏳ Loading...</span>
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <div class="spinner"></div>
+    <p>Loading dashboard data...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="errorMessage && !isLoading" class="error-banner">
+    <span class="error-icon">⚠️</span>
+    <span>{{ errorMessage }}</span>
+    <button (click)="refreshDashboard()">Retry</button>
+  </div>
+
+  <!-- Dashboard Content -->
+  <div *ngIf="!isLoading && !errorMessage" class="dashboard-content">
+    
+    <!-- KPI Cards Section -->
+    <section class="kpi-section">
+      <h2 class="section-title">Key Performance Indicators</h2>
+      <div class="kpi-grid">
+        <div *ngFor="let kpi of kpis" class="kpi-card" [ngClass]="getKpiStatusClass(kpi.status)">
+          <div class="kpi-header">
+            <span class="kpi-icon">📊</span>
+            <span class="kpi-status-badge">{{ kpi.status }}</span>
+          </div>
+          <h3 class="kpi-name">{{ kpi.kpiName }}</h3>
+          <div class="kpi-value-container">
+            <span class="kpi-value">{{ kpi.calculatedValue | number:'1.2-2' }}</span>
+            <span class="kpi-unit">{{ kpi.unit || '' }}</span>
+          </div>
+          <div class="kpi-footer" *ngIf="kpi.targetValue">
+            <span class="kpi-target">Target: {{ kpi.targetValue | number:'1.2-2' }}</span>
+            <span class="kpi-percentage" *ngIf="kpi.percentageOfTarget">
+              {{ kpi.percentageOfTarget }}%
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Charts Section -->
+    <section class="charts-section">
+      <div class="chart-row">
+        <!-- Response Time Chart -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Response Time Trend (24h)</h3>
+            <span class="chart-icon">📈</span>
+          </div>
+          <div class="chart-container">
+            <canvas *ngIf="responseTimeChartData" 
+                    baseChart
+                    [data]="responseTimeChartData"
+                    [options]="lineChartOptions"
+                    [type]="'line'">
+            </canvas>
+            <div *ngIf="!responseTimeChartData" class="no-chart-data">
+              <p>No data available</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- CPU Usage Chart -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>CPU Usage Trend (24h)</h3>
+            <span class="chart-icon">💻</span>
+          </div>
+          <div class="chart-container">
+            <canvas *ngIf="cpuUsageChartData" 
+                    baseChart
+                    [data]="cpuUsageChartData"
+                    [options]="lineChartOptions"
+                    [type]="'line'">
+            </canvas>
+            <div *ngIf="!cpuUsageChartData" class="no-chart-data">
+              <p>No data available</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Server Comparison Chart -->
+      <div class="chart-card full-width">
+        <div class="chart-header">
+          <h3>Server Performance Comparison</h3>
+          <span class="chart-icon">🖥️</span>
+        </div>
+        <div class="chart-container">
+          <canvas *ngIf="serverComparisonChartData" 
+                  baseChart
+                  [data]="serverComparisonChartData"
+                  [options]="barChartOptions"
+                  [type]="'bar'">
+          </canvas>
+          <div *ngIf="!serverComparisonChartData" class="no-chart-data">
+            <p>No data available</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Anomalies Section -->
+    <section class="anomaly-section">
+      <h2 class="section-title">
+        Active Anomalies
+        <span class="anomaly-count" *ngIf="unresolvedAnomalies.length > 0">
+          {{ unresolvedAnomalies.length }}
+        </span>
+      </h2>
+      
+      <div *ngIf="unresolvedAnomalies.length === 0" class="no-data-card">
+        <span class="success-icon">✅</span>
+        <p>No active anomalies detected</p>
+        <small>All systems operating normally</small>
+      </div>
+      
+      <div *ngIf="unresolvedAnomalies.length > 0" class="anomaly-grid">
+        <div *ngFor="let anomaly of unresolvedAnomalies" 
+             class="anomaly-card" 
+             [ngClass]="getSeverityClass(anomaly.severity)">
+          <div class="anomaly-header">
+            <span class="anomaly-severity-badge">{{ anomaly.severity }}</span>
+            <span class="anomaly-time">{{ anomaly.detectedAt | date:'short' }}</span>
+          </div>
+          <h3 class="anomaly-title">{{ anomaly.metricType }}</h3>
+          <p class="anomaly-server">🖥️ {{ anomaly.serverName }}</p>
+          <p class="anomaly-description">{{ anomaly.description }}</p>
+          <div class="anomaly-footer">
+            <span class="anomaly-value">Value: {{ anomaly.actualValue | number:'1.2-2' }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Summary Stats -->
+    <section class="summary-section" *ngIf="dashboardAnalytics">
+      <div class="summary-grid">
+        <div class="summary-card">
+          <span class="summary-icon">📊</span>
+          <div class="summary-content">
+            <h4>Total Metrics</h4>
+            <p class="summary-value">{{ dashboardAnalytics.totalMetrics | number }}</p>
+          </div>
+        </div>
+        <div class="summary-card">
+          <span class="summary-icon">🖥️</span>
+          <div class="summary-content">
+            <h4>Active Servers</h4>
+            <p class="summary-value">{{ dashboardAnalytics.activeServers || 5 }}</p>
+          </div>
+        </div>
+        <div class="summary-card">
+          <span class="summary-icon">⚡</span>
+          <div class="summary-content">
+            <h4>Avg Response Time</h4>
+            <p class="summary-value">{{ dashboardAnalytics.avgResponseTime | number:'1.0-0' }}ms</p>
+          </div>
+        </div>
+        <div class="summary-card">
+          <span class="summary-icon">🎯</span>
+          <div class="summary-content">
+            <h4>System Health</h4>
+            <p class="summary-value">{{ dashboardAnalytics.systemHealth || 'Good' }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

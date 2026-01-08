@@ -1,0 +1,13 @@
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.cache
+*.log
+*.swp
+*~
+.DS_Store
+appsettings.*.json
+!appsettings.json
+!appsettings.Development.json

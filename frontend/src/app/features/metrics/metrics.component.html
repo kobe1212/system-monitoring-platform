@@ -1,0 +1,85 @@
+<div class="metrics-container">
+  <div class="metrics-header">
+    <h1>System Metrics</h1>
+    <button class="btn-primary" (click)="toggleCreateForm()">
+      {{ showCreateForm ? 'Cancel' : 'Add Metric' }}
+    </button>
+  </div>
+
+  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
+  <div *ngIf="showCreateForm" class="create-form">
+    <h2>Create New Metric</h2>
+    <form (ngSubmit)="createMetric()">
+      <div class="form-group">
+        <label>Metric Name *</label>
+        <input type="text" [(ngModel)]="newMetric.metricName" name="metricName" required>
+      </div>
+      <div class="form-group">
+        <label>Value *</label>
+        <input type="number" [(ngModel)]="newMetric.value" name="value" step="0.01" required>
+      </div>
+      <div class="form-group">
+        <label>Unit *</label>
+        <input type="text" [(ngModel)]="newMetric.unit" name="unit" required>
+      </div>
+      <div class="form-group">
+        <label>Source *</label>
+        <input type="text" [(ngModel)]="newMetric.source" name="source" required>
+      </div>
+      <div class="form-group">
+        <label>Tags</label>
+        <input type="text" [(ngModel)]="newMetric.tags" name="tags">
+      </div>
+      <button type="submit" class="btn-primary">Create Metric</button>
+    </form>
+  </div>
+
+  <div class="filter-section">
+    <h2>Filter Metrics</h2>
+    <div class="filter-form">
+      <div class="form-group">
+        <label>Metric Name</label>
+        <input type="text" [(ngModel)]="query.metricName" placeholder="Filter by name">
+      </div>
+      <div class="form-group">
+        <label>Source</label>
+        <input type="text" [(ngModel)]="query.source" placeholder="Filter by source">
+      </div>
+      <div class="filter-actions">
+        <button class="btn-secondary" (click)="applyFilter()">Apply Filter</button>
+        <button class="btn-secondary" (click)="clearFilter()">Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="loading">Loading metrics...</div>
+
+  <div *ngIf="!isLoading" class="metrics-list">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Metric Name</th>
+          <th>Value</th>
+          <th>Unit</th>
+          <th>Source</th>
+          <th>Tags</th>
+          <th>Timestamp</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let metric of metrics">
+          <td>{{ metric.id }}</td>
+          <td>{{ metric.metricName }}</td>
+          <td>{{ metric.value }}</td>
+          <td>{{ metric.unit }}</td>
+          <td>{{ metric.source }}</td>
+          <td>{{ metric.tags || '-' }}</td>
+          <td>{{ metric.timestamp | date:'short' }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="metrics.length === 0" class="empty-state">No metrics found</div>
+  </div>
+</div>
