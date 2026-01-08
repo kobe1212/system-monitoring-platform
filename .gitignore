@@ -105,3 +105,10 @@ Thumbs.db
 appsettings.Development.json
 appsettings.Production.json
 !appsettings.json
+
+# Personal Reference Files (Not for GitHub)
+INTEL_JOB_ALIGNMENT.md
+RESUME_CONTENT.md
+DEPLOYMENT_GUIDE.md
+GITHUB_SETUP_GUIDE.md
+SQL_SERVER_SETUP.md
